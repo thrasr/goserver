@@ -1,0 +1,27 @@
+#!/bin/bash -e
+
+case "$1" in
+  -v|--version)
+    version="$2"
+esac
+
+# Parse arguments
+source "${OPENSHIFT_GO_DIR}/lib/util"
+parse_args $@
+
+# Don't set -u until after the above arg parsing is complete
+set -u
+
+echo "$version" > $OPENSHIFT_GO_DIR/env/GOVERSION
+echo ${OPENSHIFT_GO_DIR}/logs > ${OPENSHIFT_GO_DIR}/env/OPENSHIFT_GO_LOG_DIR
+
+echo $OPENSHIFT_GO_IP > $OPENSHIFT_GO_DIR/env/HOST
+echo $OPENSHIFT_GO_PORT > $OPENSHIFT_GO_DIR/env/PORT
+
+###
+pushd $OPENSHIFT_GO_DIR > /dev/null
+for dir in logs tmp pid cache; do
+	mkdir -p $dir
+done
+popd > /dev/null
+

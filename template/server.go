@@ -5,7 +5,7 @@ import (
 	"html"
 	"log"
 	"net/http"
-	//"os"     //command line argument to pass in port?
+	"os"
 )
 
 func echo(w http.ResponseWriter, r *http.Request) {
@@ -14,16 +14,17 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
-	//var h Hello
-	//var e Echo
-
+	//handler functions
 	http.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Hello, world")
 	})
 	http.HandleFunc("/", echo)
 
-	err := http.ListenAndServe(":8080", nil)
+	//grab openshift's IP and port number
+	bind := fmt.Sprintf("%s:%s", os.Getenv("OPENSHIFT_GO_IP"), os.Getenv("OPENSHIFT_GO_PORT"))
 
+	//run server
+	err := http.ListenAndServe(bind, nil)
 	if err != nil {
 		//panic(err)       //panic shuts down server
 		log.Fatal(err)
