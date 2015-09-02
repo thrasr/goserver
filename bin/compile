@@ -96,6 +96,7 @@ then
     GOPATH=$CUSTOM_GOPATH:$GOPATH export GOPATH
 fi
 go get -tags openshift ./...
+go get github.com/chimeracoder/anaconda
 
 mkdir -p $build/bin
 mv $b/* $build/bin
